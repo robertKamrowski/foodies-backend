@@ -1,20 +1,24 @@
 const express = require('express')
 const dotenv = require('dotenv').config()
 const colors = require('colors')
-const port = process.env.PORT || 5000
 
 const {errorHandler} = require('./middlewares/errorMiddleware')
 const {connectDB} = require('./config/db')
 
 connectDB()
+
+const port = process.env.PORT || 5000
 const app = express()
 
-// middlewares
+// Global middlewares
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-app.use('/api/plans', require('./routes/allDietPlansRoute'))
+// Routes
+app.use('/api/auth', require('./routes/userRoutes'))
+app.use('/api/plans', require('./routes/allDietPlansRoutes'))
 
+// Response middlewares
 app.use(errorHandler)
 
-app.listen(port, () => console.log(`Server started on port ${port}`))
+app.listen(port, () => console.log(`Server is running on port: ${port}`.cyan))
