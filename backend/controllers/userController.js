@@ -79,9 +79,11 @@ const getMe = async (req, res) => {
   const {id, username, role} = await User.findById(req.user.id)
 
   res.status(200).json({
-    id,
-    username,
-    role
+    user: {
+      id,
+      username,
+      role
+    }
   })
 }
 
