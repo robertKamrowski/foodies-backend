@@ -21,6 +21,7 @@ app.use(cors())
 
 // Routes
 app.use('/api/auth', require('./routes/userRoutes'))
+app.use('/api/', require('./routes/dietPlanRoutes'))
 
 // Response middlewares
 app.use(errorHandler)
