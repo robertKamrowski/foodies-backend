@@ -3,8 +3,20 @@ const ApiController = require('../lib/ApiController')
 
 class DietPlanController extends ApiController {
    constructor() {
-      const apiFields = ['name', 'description', 'img']
-      super(DietPlan, ['_id', ...apiFields], [...apiFields], [], ['__v'])
+      const apiFields = [
+         'name',
+         'description',
+         'dailyMeals',
+         'dailyMakro',
+         'recipes'
+      ]
+      super(
+         DietPlan,
+         ['_id', ...apiFields],
+         [...apiFields],
+         ['recipes'],
+         ['__v']
+      )
    }
 
    async post(req, res) {
