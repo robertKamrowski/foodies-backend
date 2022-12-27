@@ -14,5 +14,10 @@ router.post(
    authProtect,
    DietPlanController.post.bind(DietPlanController)
 )
+router.post(
+   '/assign-diet-plan',
+   authProtect,
+   DietPlanController.assignDietPlanToUser.bind(DietPlanController)
+)
 
 module.exports = router

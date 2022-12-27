@@ -1,4 +1,5 @@
 const DietPlan = require('../models/dietPlanModel')
+const User = require('../models/userModel')
 const ApiController = require('../lib/ApiController')
 
 class DietPlanController extends ApiController {
@@ -27,6 +28,28 @@ class DietPlanController extends ApiController {
       res.status(201).json({
          message: 'Plan dietetyczny dodany pomyślnie!',
          data: resp
+      })
+   }
+
+   async assignDietPlanToUser(req, res) {
+      const loggedInUserId = req.user.id
+      const { dietPlanId } = req.body
+
+      const user = await User.findById(loggedInUserId)
+
+      // User already has a plan
+      if (user.dietPlan) {
+         res.status(400).json({
+            message: `Użytkownik ${user.username} ma już przypisany plan dietetyczny. Znajdziesz go w zakładce "Mój plan"`
+         })
+      }
+
+      // Assign plan to user and save document
+      user.dietPlan = dietPlanId
+      await user.save()
+
+      res.status(200).json({
+         message: `Pomyślnie przypisano plan dietetyczny do użytkonwika ${user.username}. Przejdź na do zakładki "Mój plan" aby wybrać ulubione przepisy z diety!`
       })
    }
 }
