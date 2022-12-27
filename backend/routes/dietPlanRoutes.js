@@ -19,5 +19,9 @@ router.post(
    authProtect,
    DietPlanController.assignDietPlanToUser.bind(DietPlanController)
 )
-
+router.delete(
+   '/remove-diet-plan',
+   authProtect,
+   DietPlanController.removeDietPlanFromUser.bind(DietPlanController)
+)
 module.exports = router

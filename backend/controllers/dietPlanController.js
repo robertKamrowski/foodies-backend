@@ -52,6 +52,26 @@ class DietPlanController extends ApiController {
          message: `Pomyślnie przypisano plan dietetyczny do użytkonwika ${user.username}. Przejdź na do zakładki "Mój plan" aby wybrać ulubione przepisy z diety!`
       })
    }
+
+   async removeDietPlanFromUser(req, res) {
+      const loggedInUserId = req.user.id
+      const user = await User.findById(loggedInUserId)
+
+      // User doesn't have a plan
+      if (!user.dietPlan) {
+         res.status(400).json({
+            message: `Użytkownik ${user.username} nie ma przypisanego planu dietetycznego. Znajdziesz go w zakładce "Wszystkie diety"`
+         })
+      }
+
+      // Remove property from user
+      user.dietPlan = null
+      await user.save()
+
+      res.status(200).json({
+         message: `Pomyślnie wypisano użytkownika ${user.username} z planu dietetycznego`
+      })
+   }
 }
 
 module.exports = new DietPlanController()

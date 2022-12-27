@@ -70,7 +70,9 @@ class UserController extends ApiController {
 
    async getMe(req, res) {
       const { id } = req.user
-      const user = await User.findById(id, '-__v -password')
+      const user = await User.findById(id, '-__v -password').populate([
+         'dietPlan'
+      ])
 
       res.status(200).json({
          message: 'Dane użytkownika pobrane pomyślnie',
