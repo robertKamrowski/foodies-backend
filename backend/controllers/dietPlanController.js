@@ -42,6 +42,7 @@ class DietPlanController extends ApiController {
          res.status(400).json({
             message: `Użytkownik ${user.username} ma już przypisany plan dietetyczny. Znajdziesz go w zakładce "Mój plan"`
          })
+         return
       }
 
       // Assign plan to user and save document
@@ -62,6 +63,7 @@ class DietPlanController extends ApiController {
          res.status(400).json({
             message: `Użytkownik ${user.username} nie ma przypisanego planu dietetycznego. Znajdziesz go w zakładce "Wszystkie diety"`
          })
+         return
       }
 
       // Remove property from user
