@@ -13,9 +13,12 @@ const dietPlanSchema = mongoose.Schema({
    recipes: [
       {
          type: Schema.Types.ObjectId,
-         ref: 'Recipe'
+         ref: 'Recipe',
+         autopopulate: true
       }
    ]
 })
+
+dietPlanSchema.plugin(require('mongoose-autopopulate'))
 
 module.exports = mongoose.model('DietPlan', dietPlanSchema)
