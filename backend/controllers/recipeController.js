@@ -4,7 +4,14 @@ const ApiController = require('../lib/ApiController')
 
 class RecipeController extends ApiController {
    constructor() {
-      const apiFields = ['title', 'kcal', 'makro', 'steps', 'ingredients']
+      const apiFields = [
+         'title',
+         'kcal',
+         'isDone',
+         'makro',
+         'steps',
+         'ingredients'
+      ]
       super(Recipe, ['_id', ...apiFields], [...apiFields], [], ['__v'])
    }
 
