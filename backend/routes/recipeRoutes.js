@@ -18,4 +18,10 @@ router.post(
    RecipeController.addToSchedule.bind(RecipeController)
 )
 
+router.post(
+   '/remove-from-schedule',
+   authProtect,
+   RecipeController.removeFromSchedule.bind(RecipeController)
+)
+
 module.exports = router

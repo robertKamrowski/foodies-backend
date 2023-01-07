@@ -19,6 +19,7 @@ class RecipeController extends ApiController {
       })
    }
 
+   // Adds a recipe to selected day
    async addToSchedule(req, res) {
       const loggedInUserId = req.user.id
       const { day, recipeId } = req.body
@@ -43,6 +44,24 @@ class RecipeController extends ApiController {
       user.save()
       res.status(200).json({
          message: `Przepis dodany pomyślnie do dnia`
+      })
+   }
+
+   async removeFromSchedule(req, res) {
+      const loggedInUserId = req.user.id
+      const { day, recipeId } = req.body
+
+      // Find user
+      const user = await User.findById(loggedInUserId)
+
+      // Remove recipe from day schedule and save
+      const index = user.dietSchedule[day].findIndex(
+         (recipe) => recipe._id.toString() === recipeId
+      )
+      user.dietSchedule[day].splice(index, 1)
+      user.save()
+      res.status(200).json({
+         message: `Przepis usunięty pomyślnie z dnia`
       })
    }
 }
