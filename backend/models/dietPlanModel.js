@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const { Schema } = require('mongoose')
+const autopopulate = require('mongoose-autopopulate')
 
 const dietPlanSchema = mongoose.Schema({
    name: String,
@@ -19,6 +20,6 @@ const dietPlanSchema = mongoose.Schema({
    ]
 })
 
-dietPlanSchema.plugin(require('mongoose-autopopulate'))
+dietPlanSchema.plugin(autopopulate)
 
 module.exports = mongoose.model('DietPlan', dietPlanSchema)
