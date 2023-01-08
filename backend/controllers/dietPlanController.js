@@ -66,8 +66,16 @@ class DietPlanController extends ApiController {
          return
       }
 
-      // Remove property from user
+      // Remove property value from user
       user.dietPlan = null
+      // Clear all recipes from schedule
+      user.dietSchedule = Object.fromEntries(
+         Object.entries(user.dietSchedule).map(([day, value]) => [
+            day,
+            (value = [])
+         ])
+      )
+
       await user.save()
 
       res.status(200).json({
