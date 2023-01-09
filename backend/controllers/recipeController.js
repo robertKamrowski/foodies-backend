@@ -71,6 +71,34 @@ class RecipeController extends ApiController {
          message: `Przepis usunięty pomyślnie z dnia`
       })
    }
+
+   async toggleDone(req, res) {
+      const loggedInUserId = req.user.id
+      const { day, recipeId } = req.body
+
+      const user = await User.findById(loggedInUserId)
+      const recipe = user.dietSchedule[day].find(
+         (recipe) => recipe._id.toString() === recipeId
+      )
+
+      // Message if no recipe is found
+      if (!recipe) {
+         res.status(400).json({
+            message: 'Nie znaleziono przepisu w danym dniu'
+         })
+         return
+      }
+
+      // Toggle recipe boolean value
+      recipe.isDone = !recipe.isDone
+      recipe.save()
+
+      res.status(200).json({
+         message: recipe.isDone
+            ? 'Przepis oznaczony jako zrobiony, tak trzymaj!'
+            : 'Przepis oznaczony jako nie zrobiony'
+      })
+   }
 }
 
 module.exports = new RecipeController()

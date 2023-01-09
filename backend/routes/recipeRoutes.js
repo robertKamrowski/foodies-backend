@@ -24,4 +24,10 @@ router.post(
    RecipeController.removeFromSchedule.bind(RecipeController)
 )
 
+router.post(
+   '/toggle-recipe-done',
+   authProtect,
+   RecipeController.toggleDone.bind(RecipeController)
+)
+
 module.exports = router
