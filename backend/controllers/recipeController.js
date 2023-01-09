@@ -61,6 +61,13 @@ class RecipeController extends ApiController {
       // Find user
       const user = await User.findById(loggedInUserId)
 
+      // Set done to false when recipe is removed from schedule
+      const recipe = user.dietSchedule[day].find(
+         (recipe) => recipe._id.toString() === recipeId
+      )
+      recipe.isDone = false
+      recipe.save()
+
       // Remove recipe from day schedule and save
       const index = user.dietSchedule[day].findIndex(
          (recipe) => recipe._id.toString() === recipeId
@@ -94,9 +101,9 @@ class RecipeController extends ApiController {
       recipe.save()
 
       res.status(200).json({
-         message: recipe.isDone
-            ? 'Przepis oznaczony jako zrobiony, tak trzymaj!'
-            : 'Przepis oznaczony jako nie zrobiony'
+         message: `Przepis oznaczony jako ${
+            recipe.isDone ? 'zrobiony, tak trzymaj!' : 'nie zrobiony'
+         }`
       })
    }
 }
