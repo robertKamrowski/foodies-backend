@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose')
 const autopopulate = require('mongoose-autopopulate')
+const recipeSchemaObj = require('../lib/recipeSchemaObj')
 
 const userSchema = Schema({
    username: {
@@ -15,55 +16,13 @@ const userSchema = Schema({
       ref: 'DietPlan'
    },
    dietSchedule: {
-      monday: [
-         {
-            type: Schema.Types.ObjectId,
-            ref: 'Recipe',
-            autopopulate: true
-         }
-      ],
-      tuesday: [
-         {
-            type: Schema.Types.ObjectId,
-            ref: 'Recipe',
-            autopopulate: true
-         }
-      ],
-      wednesday: [
-         {
-            type: Schema.Types.ObjectId,
-            ref: 'Recipe',
-            autopopulate: true
-         }
-      ],
-      thursday: [
-         {
-            type: Schema.Types.ObjectId,
-            ref: 'Recipe',
-            autopopulate: true
-         }
-      ],
-      friday: [
-         {
-            type: Schema.Types.ObjectId,
-            ref: 'Recipe',
-            autopopulate: true
-         }
-      ],
-      saturday: [
-         {
-            type: Schema.Types.ObjectId,
-            ref: 'Recipe',
-            autopopulate: true
-         }
-      ],
-      sunday: [
-         {
-            type: Schema.Types.ObjectId,
-            ref: 'Recipe',
-            autopopulate: true
-         }
-      ]
+      monday: [recipeSchemaObj],
+      tuesday: [recipeSchemaObj],
+      wednesday: [recipeSchemaObj],
+      thursday: [recipeSchemaObj],
+      friday: [recipeSchemaObj],
+      saturday: [recipeSchemaObj],
+      sunday: [recipeSchemaObj]
    }
 })
 userSchema.plugin(autopopulate)

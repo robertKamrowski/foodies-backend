@@ -1,4 +1,4 @@
-const Recipe = require('../models/recipieModel')
+const Recipe = require('../models/recipeModel')
 const User = require('../models/userModel')
 const ApiController = require('../lib/ApiController')
 
@@ -33,12 +33,13 @@ class RecipeController extends ApiController {
 
       // Find user
       const user = await User.findById(loggedInUserId)
+      const recipe = await Recipe.findById(recipeId)
 
       // Check if there is already selected recipe in that day
       const recipeExists = user.dietSchedule[day].some((recipe) => {
          return recipe._id.toString() === recipeId
       })
-
+      //
       if (recipeExists) {
          res.status(400).json({
             message: 'Wybrany przepis jest już przypisany do dnia'
@@ -47,8 +48,9 @@ class RecipeController extends ApiController {
       }
 
       // Add recipe to day schedule and save
-      user.dietSchedule[day].push(recipeId)
+      user.dietSchedule[day].push(recipe)
       user.save()
+
       res.status(200).json({
          message: `Przepis dodany pomyślnie do dnia`
       })
@@ -61,19 +63,13 @@ class RecipeController extends ApiController {
       // Find user
       const user = await User.findById(loggedInUserId)
 
-      // Set done to false when recipe is removed from schedule
-      const recipe = user.dietSchedule[day].find(
-         (recipe) => recipe._id.toString() === recipeId
-      )
-      recipe.isDone = false
-      recipe.save()
-
       // Remove recipe from day schedule and save
       const index = user.dietSchedule[day].findIndex(
          (recipe) => recipe._id.toString() === recipeId
       )
       user.dietSchedule[day].splice(index, 1)
       user.save()
+
       res.status(200).json({
          message: `Przepis usunięty pomyślnie z dnia`
       })
@@ -98,7 +94,7 @@ class RecipeController extends ApiController {
 
       // Toggle recipe boolean value
       recipe.isDone = !recipe.isDone
-      recipe.save()
+      user.save()
 
       res.status(200).json({
          message: `Przepis oznaczony jako ${

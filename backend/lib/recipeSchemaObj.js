@@ -1,6 +1,4 @@
-const mongoose = require('mongoose')
-
-const recipeSchema = mongoose.Schema({
+const recipeSchemaObj = {
    title: String,
    kcal: Number,
    isDone: {
@@ -14,6 +12,6 @@ const recipeSchema = mongoose.Schema({
    },
    steps: Array,
    ingredients: Array
-})
+}
 
-module.exports = mongoose.model('Recipe', recipeSchema)
+module.exports = recipeSchemaObj
