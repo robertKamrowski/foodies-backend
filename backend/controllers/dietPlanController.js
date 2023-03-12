@@ -50,7 +50,7 @@ class DietPlanController extends ApiController {
       await user.save()
 
       res.status(200).json({
-         message: `Pomyślnie przypisano plan dietetyczny do użytkonwika ${user.username}. Przejdź na do zakładki "Mój plan" aby wybrać ulubione przepisy z diety!`
+         message: `Pomyślnie przypisano plan dietetyczny do użytkownika ${user.username}. Przejdź na do zakładki "Mój plan" aby wybrać ulubione przepisy z diety!`
       })
    }
 
