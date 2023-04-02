@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose')
 const autopopulate = require('mongoose-autopopulate')
 const recipeSchemaObj = require('../lib/recipeSchemaObj')
+const progressSchemaObj = require('../lib/progressSchemaObj')
 
 const userSchema = Schema({
    username: {
@@ -23,7 +24,8 @@ const userSchema = Schema({
       friday: [recipeSchemaObj],
       saturday: [recipeSchemaObj],
       sunday: [recipeSchemaObj]
-   }
+   },
+   progress: [progressSchemaObj]
 })
 userSchema.plugin(autopopulate)
 

@@ -23,6 +23,7 @@ app.use(cors())
 app.use('/api/auth', require('./routes/userRoutes'))
 app.use('/api/', require('./routes/dietPlanRoutes'))
 app.use('/api/', require('./routes/recipeRoutes'))
+app.use('/api/', require('./routes/progressRoutes'))
 
 // Response middlewares
 app.use(errorHandler)
