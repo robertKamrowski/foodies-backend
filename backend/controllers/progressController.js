@@ -1,5 +1,6 @@
 const User = require('../models/userModel')
 const asyncHandler = require('express-async-handler')
+const { chartTransform } = require('../lib/chartTransform')
 
 /*
    @desc    Push a progress data object into user progress array
@@ -52,7 +53,41 @@ const postProgress = asyncHandler(async (req, res) => {
    @route   GET /api/progress
    @access  Private
 */
-const getProgress = asyncHandler(async (req, res) => {})
+const getProgress = asyncHandler(async (req, res) => {
+   // Get loggedIn user
+   const userId = req.user.id
+   const loggedInUser = await User.findById(userId)
+   if (!loggedInUser) {
+      res.status(400)
+      throw new Error('Nie znaleziono użytkownika')
+   }
+
+   res.status(200).json({
+      data: loggedInUser.progress,
+      message: 'Postępy pobrane pomyślnie !'
+   })
+})
+
+/*
+   @desc    Get a progress data from loggedIn user
+   @route   GET /api/progress
+   @access  Private
+*/
+const getProgressChart = asyncHandler(async (req, res) => {
+   // Get loggedIn user
+   const userId = req.user.id
+   const loggedInUser = await User.findById(userId)
+   if (!loggedInUser) {
+      res.status(400)
+      throw new Error('Nie znaleziono użytkownika')
+   }
+
+   // Transform progress data to be friendly for a chart
+   res.status(200).json({
+      data: chartTransform(loggedInUser.progress),
+      message: 'Dane do wykresu pobrano pomyślnie'
+   })
+})
 
 /*
    @desc    Delete a progress record from loggedIn user
@@ -69,5 +104,6 @@ const deleteProgress = asyncHandler(async (req, res) => {
 module.exports = {
    postProgress,
    getProgress,
+   getProgressChart,
    deleteProgress
 }
