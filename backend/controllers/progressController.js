@@ -44,7 +44,7 @@ const postProgress = asyncHandler(async (req, res) => {
          date,
          weight: +weight
       },
-      message: 'Tak trzymaj, monitoruj swóje postępy każdego dnia!'
+      message: 'Tak trzymaj, monitoruj swoje postępy każdego dnia!'
    })
 })
 
@@ -64,7 +64,7 @@ const getProgress = asyncHandler(async (req, res) => {
 
    res.status(200).json({
       data: loggedInUser.progress,
-      message: 'Postępy pobrane pomyślnie !'
+      message: 'Postępy pobrane pomyślnie!'
    })
 })
 
@@ -95,9 +95,31 @@ const getProgressChart = asyncHandler(async (req, res) => {
    @access  Private
 */
 const deleteProgress = asyncHandler(async (req, res) => {
+   // Get loggedIn user
+   const userId = req.user.id
+   const loggedInUser = await User.findById(userId)
+   if (!loggedInUser) {
+      res.status(400)
+      throw new Error('Nie znaleziono użytkownika')
+   }
+
+   const { id } = req.params
+   const progressToRemove = await loggedInUser.progress.find(
+      (progress) => progress._id.toString() === id
+   )
+
+   if (!progressToRemove) {
+      res.status(400)
+      throw new Error('Nie znaleziono postępu do usunięcia')
+   }
+
+   loggedInUser.progress = loggedInUser.progress.filter(
+      (progress) => progress._id.toString() !== id
+   )
+   loggedInUser.save()
+
    res.status(200).json({
-      data: {},
-      message: 'Delete works'
+      message: 'Postęp usunięty pomyślnie!'
    })
 })
 
