@@ -26,7 +26,7 @@ const postProgress = asyncHandler(async (req, res) => {
 
    // Validate if the same progress record already exists
    // There should be only one progress item for one day
-   const ifProgressItemExists = await loggedInUser.progress.find(
+   const ifProgressItemExists = loggedInUser.progress.find(
       (item) => item.date === date
    )
    if (ifProgressItemExists) {
@@ -45,6 +45,36 @@ const postProgress = asyncHandler(async (req, res) => {
          weight: +weight
       },
       message: 'Tak trzymaj, monitoruj swoje postępy każdego dnia!'
+   })
+})
+
+/*
+   @desc    Get a single progress record from loggedIn user
+   @route   GET /api/progress/:id
+   @access  Private
+*/
+const getSingleProgress = asyncHandler(async (req, res) => {
+   // Get loggedIn user
+   const userId = req.user.id
+   const loggedInUser = await User.findById(userId)
+   if (!loggedInUser) {
+      res.status(400)
+      throw new Error('Nie znaleziono użytkownika')
+   }
+
+   const { id } = req.params
+   const progress = loggedInUser.progress.find(
+      (progress) => progress._id.toString() === id
+   )
+
+   if (!progress) {
+      res.status(400)
+      throw new Error('Nie znaleziono postępu')
+   }
+
+   res.status(200).json({
+      message: 'Postęp znaleziony pomyślnie!',
+      data: progress
    })
 })
 
@@ -70,7 +100,7 @@ const getProgress = asyncHandler(async (req, res) => {
 
 /*
    @desc    Get a progress data from loggedIn user
-   @route   GET /api/progress
+   @route   GET /api/progress-chart
    @access  Private
 */
 const getProgressChart = asyncHandler(async (req, res) => {
@@ -90,8 +120,47 @@ const getProgressChart = asyncHandler(async (req, res) => {
 })
 
 /*
+   @desc    Update a progress record from loggedIn user
+   @route   PATCH /api/progress/:id
+   @access  Private
+*/
+const updateProgress = asyncHandler(async (req, res) => {
+   // Get loggedIn user
+   const userId = req.user.id
+   const loggedInUser = await User.findById(userId)
+   if (!loggedInUser) {
+      res.status(400)
+      throw new Error('Nie znaleziono użytkownika')
+   }
+
+   const { id } = req.params
+
+   const progressIndex = loggedInUser.progress.findIndex(
+      (progress) => progress._id.toString() === id
+   )
+
+   // No progress
+   if (progressIndex === -1) {
+      res.status(400)
+      throw new Error('Nie znaleziono postępu do zaktualizowania')
+   }
+
+   // Update user progress
+   loggedInUser.progress[progressIndex] = {
+      ...loggedInUser.progress[progressIndex],
+      ...req.body
+   }
+   loggedInUser.save()
+
+   res.status(200).json({
+      message: 'Postęp zaktualizowany pomyślnie!',
+      data: req.body
+   })
+})
+
+/*
    @desc    Delete a progress record from loggedIn user
-   @route   DELETE /api/progress
+   @route   DELETE /api/progress/:id
    @access  Private
 */
 const deleteProgress = asyncHandler(async (req, res) => {
@@ -104,7 +173,7 @@ const deleteProgress = asyncHandler(async (req, res) => {
    }
 
    const { id } = req.params
-   const progressToRemove = await loggedInUser.progress.find(
+   const progressToRemove = loggedInUser.progress.find(
       (progress) => progress._id.toString() === id
    )
 
@@ -125,7 +194,9 @@ const deleteProgress = asyncHandler(async (req, res) => {
 
 module.exports = {
    postProgress,
+   getSingleProgress,
    getProgress,
    getProgressChart,
+   updateProgress,
    deleteProgress
 }
