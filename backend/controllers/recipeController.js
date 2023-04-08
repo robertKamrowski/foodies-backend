@@ -98,7 +98,7 @@ class RecipeController extends ApiController {
 
       res.status(200).json({
          message: `Przepis oznaczony jako ${
-            recipe.isDone ? 'zrobiony, tak trzymaj!' : 'nie zrobiony'
+            recipe.isDone ? 'zrobiony, tak trzymaj!' : 'niezrobiony'
          }`
       })
    }
